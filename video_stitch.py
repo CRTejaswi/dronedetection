@@ -53,33 +53,31 @@ class VideoStitcher:
 
     @staticmethod
     def detect_and_extract(image, detectortype):
-        match detectortype:
+        if detectortype == 'sift':
+            sift = cv2.xfeatures2d.SIFT_create()
+            keypoints, features = sift.detectAndCompute(image, None)
+            bf = cv2.BFMatcher(cv2.NORM_L1,crossCheck=False)
 
-            case 'sift':
-                sift = cv2.xfeatures2d.SIFT_create()
-                keypoints, features = sift.detectAndCompute(image, None)
-                bf = cv2.BFMatcher(cv2.NORM_L1,crossCheck=False)
+        elif detectortype == 'surf':
+            surf = cv2.xfeatures2d.SURF_create()
+            keypoints, features = surf.detectAndCompute(image, None)
+            bf = cv2.BFMatcher(cv2.NORM_L1,crossCheck=False)
 
-            case 'surf':
-                surf = cv2.xfeatures2d.SURF_create()
-                keypoints, features = surf.detectAndCompute(image, None)
-                bf = cv2.BFMatcher(cv2.NORM_L1,crossCheck=False)
+        elif detectortype == 'fast':
+            pass
 
-            case 'fast':
-                pass
+        elif detectortype == 'brief':
+            brief = cv.xfeatures2d.BriefDescriptorExtractor_create()
+            keypoints, features = brief.detect(image, None)
+            bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 
-            case 'brief':
-                brief = cv.xfeatures2d.BriefDescriptorExtractor_create()
-                keypoints, features = brief.detect(image, None)
-                bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+        elif detectortype == 'orb':
+            orb = cv2.ORB_create()
+            keypoints, features = orb.detectAndCompute(image, None)
+            bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 
-            case 'orb':
-                orb = cv2.ORB_create()
-                keypoints, features = orb.detectAndCompute(image, None)
-                bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
-
-            case _:
-                raise NotImplementedError(f"'{detectortype}' not yet implemented!")
+        else:
+            raise NotImplementedError(f"'{detectortype}' not yet implemented!")
 
         # Convert the keypoints from KeyPoint objects to numpy arrays
         keypoints = np.float32([keypoint.pt for keypoint in keypoints])
