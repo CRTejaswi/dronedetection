@@ -4,6 +4,7 @@ import imutils
 import tqdm
 import os
 from moviepy.editor import ImageSequenceClip
+import argparse
 # from autostitch import *
 
 
@@ -183,9 +184,13 @@ class VideoStitcher:
         print(f"[INFO]: {self.video_out_path.split('/')[-1]} saved")
 
 
-# Example call to 'VideoStitcher'
-stitcher = VideoStitcher(left_video_in_path='l.mp4',
-                         right_video_in_path='r.mp4',
-                         video_out_path='lr.mp4',
+# ap = argparse.ArgumentParser()
+# ap.add_argument("-i", "--inputs", required=True,
+#     help="path to inputs (2-4 img)")
+# args = vars(ap.parse_args())
+
+stitcher = VideoStitcher(left_video_in_path='inputs/l.mp4',
+                         right_video_in_path='inputs/r.mp4',
+                         video_out_path='inputs/lr.mp4',
                          detectortype='orb')
 stitcher.run()
